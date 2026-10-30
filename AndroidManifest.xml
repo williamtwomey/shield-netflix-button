@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stand-in for Netflix so the SHIELD remote Netflix button opens an app of your choice
+     (YouTube by default).
+     NVIDIA PhoneWindowManager launches getLeanbackLaunchIntentForPackage("com.netflix.ninja")
+     and only falls back to the Play Store when that is null; the remote button itself is
+     delivered by NVIDIA shieldtech as a NETFLIX_KEY broadcast (see KeyReceiver). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.netflix.ninja">
+    <queries>
+        <!-- lets Picker list every TV app, and Target launch whichever was picked -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+        </intent>
+    </queries>
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <application android:label="Netflix button" android:icon="@mipmap/ic_launcher"
+        android:banner="@drawable/banner"
+        android:allowBackup="false">
+        <activity android:name=".Picker"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver android:name=".KeyReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.netflix.ninja.intent.action.NETFLIX_KEY" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
